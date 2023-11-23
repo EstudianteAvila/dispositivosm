@@ -1,0 +1,37 @@
+import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    private ImageView car;
+    private int carSpeed;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        car = findViewById(R.id.carImageView);
+        carSpeed = 10; // Velocidad del coche, puedes ajustar esto según tus preferencias
+
+        FrameLayout frameLayout = findViewById(R.id.frameLayout);
+        frameLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                moveCar(); // Llama al método moveCar() cuando toques la pantalla
+                return true;
+            }
+        });
+    }
+
+    private void moveCar() {
+        // Mueve el coche hacia la derecha
+        float newX = car.getX() + carSpeed;
+        car.setX(newX);
+    }
+}
