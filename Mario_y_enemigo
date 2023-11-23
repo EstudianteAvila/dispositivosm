@@ -1,0 +1,97 @@
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.os.Bundle;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
+import android.widget.ImageView;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    private ImageView player;
+    private ImageView enemy;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        player = findViewById(R.id.playerImageView);
+        enemy = findViewById(R.id.enemyImageView);
+
+        player.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                jump();
+            }
+        });
+    }
+
+    private void jump() {
+        Animation jumpAnimation = new TranslateAnimation(0, 0, 0, -200); // Mueve el jugador hacia arriba
+        jumpAnimation.setDuration(500); // Duración de la animación en milisegundos
+
+        jumpAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                // Acciones al comenzar la animación (opcional)
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                // Acciones al finalizar la animación (opcional)
+                squashEnemy(); // Después de saltar, intenta "aplastar" al enemigo
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+                // Acciones al repetir la animación (opcional)
+            }
+        });
+
+        player.startAnimation(jumpAnimation);
+    }
+
+    private void squashEnemy() {
+        // Animación de "aplastar" al enemigo
+        enemy.animate().scaleX(0).scaleY(0).setDuration(300).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                // Restaura el tamaño original del enemigo después de la animación
+                resetEnemy();
+            }
+        });
+    }
+
+    private void resetEnemy() {
+        // Restaura el tamaño original del enemigo
+        enemy.setScaleX(1);
+        enemy.setScaleY(1);
+    }
+}
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <ImageView
+        android:id="@+id/playerImageView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@android:drawable/btn_star"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="16dp"/>
+
+    <ImageView
+        android:id="@+id/enemyImageView"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@android:drawable/btn_minus"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/playerImageView"
+        android:layout_marginBottom="16dp"/>
+</RelativeLayout>
